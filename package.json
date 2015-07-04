@@ -1,0 +1,16 @@
+{
+    "name"          : "word-test",
+    "version"       : "0.0.1",
+    "description"   : "Creates word frequency information from parlimentary documents",
+    "main"          : "index.js",
+    "author"        : "Dylan R. Johnston",
+    "dependencies"  : {
+            "request"   : "latest",
+            "cheerio"   : "latest",
+            "xml2js"    : "latest",
+            "async"     : "latest",
+            "monk"      : "latest",
+            "progress"  : "latest",
+            "moment"    : "latest"
+    }
+}
