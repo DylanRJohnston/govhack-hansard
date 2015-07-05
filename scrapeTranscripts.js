@@ -71,7 +71,7 @@ var hansardQueue = async.queue(function(task, callback) {
                             date: date,
                             bill: title,
                             interjecting: interjecting,
-                            text: $(this).text()
+                            text: $(this).text().replace(/[^a-zA-z0-9 .]/g, "").replace(/\s\s+/g, ' ')
                         }, function(error, doc) {
                             if (error) console.log("Error in mongodb insert " + error);
                             ++completedInserts
