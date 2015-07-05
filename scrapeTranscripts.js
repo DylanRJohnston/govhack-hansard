@@ -3,10 +3,11 @@ var cheerio = require('cheerio');
 var xml2js  = require('xml2js');
 var async   = require('async');
 var moment  = require('moment');
-var db      = require('monk')(process.env.MONGOLAB_URI);
+var db      = require('monk')(process.env.MONGOLAB_URI || "localhost/hansdb");
 var ProgressBar = require('progress');
 
 var sessions = db.get('sessions');
+sessions.index("date");
 //sessions.index('session_header.date session_header.chamber', {unique: true});
 
 
@@ -34,6 +35,10 @@ var hansardQueue = async.queue(function(task, callback) {
 
             var date = moment($('session_header > date').text(), "YYYY-MM-DD").toDate();
 
+            var finishedInserting = false;
+            var attemptedInserts = 0;
+            var completedInserts = 0;
+
             //subdebate_1 represents all discussions on an issue
             $('subdebate_1').each(function(){
                 var title = $('> subdebateinfo > title', this).text();
@@ -53,11 +58,13 @@ var hansardQueue = async.queue(function(task, callback) {
                     var recentSpeaker = "";
                     $('span.HPS-Normal', this).each(function() {
                         var speaker = $('a', this).attr("href");
-                        var interjecting = $('[class$="Interjecting"]', this).count != 0;
+                        var interjecting = $('[class~="Interjecting"]', this).count;
 
                         if (speaker && talkers[speaker]) {
                             recentSpeaker = speaker;
                         }
+
+                        ++attemptedInserts;
 
                         sessions.insert({
                             speaker: talkers[recentSpeaker],
@@ -66,16 +73,27 @@ var hansardQueue = async.queue(function(task, callback) {
                             interjecting: interjecting,
                             text: $(this).text()
                         }, function(error, doc) {
-                            bar.tick(1);
                             if (error) console.log("Error in mongodb insert " + error);
+                            ++completedInserts
+
+                            if (finishedInserting && attemptedInserts ==  completedInserts) {
+                                bar.tick(1);
+                                callback(null);
+                            }
                         });
                     });
                 });
             });
+
+            finishedInserting = true;
+            if (attemptedInserts ==  completedInserts) {
+                bar.tick(1);
+                callback(null);
+            }
         }
     );
 }, 20);
-hansardQueue.drain = function() {console.log("All hansard pages parsed"); /*db.close();*/}
+hansardQueue.drain = function() {console.log("All hansard pages parsed"); db.close();}
 
 var indexQueue = async.queue(function(task, callback) {
     request(

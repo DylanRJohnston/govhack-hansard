@@ -1,10 +1,9 @@
 var express = require('express');
-var db      = require('monk')(process.env.MONGOLAB_URI);
+var db      = require('monk')(process.env.MONGOLAB_URI || "localhost/hansdb");
 var moment  = require('moment');
 
 
 var sessions = db.get('sessions');
-
 var app     = express();
 
 app.get('/search',
@@ -12,10 +11,11 @@ app.get('/search',
 
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-         res.header('Access-Control-Allow-Headers', 'Content-Type');
+        res.header('Access-Control-Allow-Headers', 'Content-Type');
 
         var startDate = moment(req.query.startDate, "DD/MM/YYYY");
         var endDate   = moment(req.query.endDate,    "DD/MM/YYYY");
+        var limit     = req.query.limit || 10000;
 
         console.log("startDate " + startDate.toDate())
         console.log("endDate " + endDate.toDate())
@@ -27,7 +27,7 @@ app.get('/search',
             }
         };
 
-        sessions.find(query, function (error, docs){
+        sessions.find(query, {limit: limit}, function (error, docs){
             if (error) console.log(error);
 
             res.json(docs);
