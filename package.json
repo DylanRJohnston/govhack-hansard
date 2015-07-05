@@ -11,6 +11,7 @@
             "async"     : "latest",
             "monk"      : "latest",
             "progress"  : "latest",
-            "moment"    : "latest"
+            "moment"    : "latest",
+            "express"   : "latest"
     }
 }
