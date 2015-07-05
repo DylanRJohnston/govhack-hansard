@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Owl Charts</title>
+</head>
+<body>
+
+   <style>
+      body {
+         text-align: center;
+         font-family:Georgia;
+      }
+      canvas {
+         display:block;
+         margin:0 auto;
+      }
+   </style>
+
+   <h1>Shouting</h1>
+   <canvas id="shouts-vis" width="400" height="400"></canvas>
+   <br/>
+   <h1>Questions</h1>
+   <canvas id="questions-vis" width="400" height="400"></canvas>
+   <br/>
+   <h1>Values-based Words</h1>
+   <canvas id="radar-frequency-vis" width="400" height="400"></canvas>
+   <!--<canvas id="shout-questions-timeseries-vis" width="700" height="400"></canvas>-->
+   <br/>
+   <h1>Time-series Data</h1>
+   <canvas id="shout-questions-timeseries-vis" width="700" height="400"></canvas>
+
+
+   <!-- external libs -->
+   <script src="jquery-2.1.4.min.js"></script>
+   <script src="Chart.js"></script>
+   <script src="moment.min.js"></script>
+
+   <!-- own libs -->
+   <script src="Textan.js"></script>
+   <script src="SpeechAnalysis.js"></script>
+
+   <!-- chart functionality -->
+   <script src="owlCharts.js"></script>
+</body>
+</html>
