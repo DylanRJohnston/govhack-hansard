@@ -3,7 +3,7 @@ var cheerio = require('cheerio');
 var xml2js  = require('xml2js');
 var async   = require('async');
 var moment  = require('moment');
-var db      = require('monk')('localhost/hansdb');
+var db      = require('monk')(process.env.MONGOLAB_URI + 'hansdb');
 var ProgressBar = require('progress');
 
 var sessions = db.get('sessions');
