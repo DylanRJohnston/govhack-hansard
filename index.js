@@ -1,5 +1,5 @@
 var express = require('express');
-var db      = require('monk')(process.env.MONGOLAB_URI + 'hansdb');
+var db      = require('monk')(process.env.MONGOLAB_URI);
 var moment  = require('moment');
 
 
